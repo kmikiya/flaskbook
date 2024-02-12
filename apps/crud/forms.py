@@ -13,3 +13,19 @@ class UserForm(FlaskForm):
             length(max=30, message="30文字以内で入力してください。"),
         ],
     )
+
+    email = StringField(
+        "メールアドレス",
+        validators=[
+            DataRequired(message="メールアドレスは必須です。"),
+            Email(message="メールアドレスの形式で入力してください。"),
+        ],
+    )
+
+    password = PasswordField(
+        "パスワード",
+        validators=[
+            DataRequired(message="パスワードは必須です。"),
+        ],
+    )
+    submit = SubmitField("新規登録")

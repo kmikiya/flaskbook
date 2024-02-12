@@ -1,6 +1,7 @@
 from apps.app import db
 from apps.crud.models import User
-from flask import Blueprint, render_template
+from apps.crud.forms import UserForm
+from flask import Blueprint, render_template, redirect, url_for
 
 # "crud":blueprint アプリ名
 # __name__：アプリのパッケージ名
@@ -25,3 +26,18 @@ def sql():
     db.session.commit()
     db.session.query(User).filter_by(id=1, username="admin").all()
     return "コンソールログを確認して下さい"
+
+
+@crud.route("/users/new", methods=["GET", "POST"])
+def create_user():
+    form = UserForm()
+    if form.validate_on_submit():
+        user = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=form.password.data,
+        )
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for("crud.users"))
+    return render_template("crud/create.html", form=form)
